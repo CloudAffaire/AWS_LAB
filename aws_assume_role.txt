@@ -1,0 +1,11 @@
+## Replace <YOUR_IAM_ROLE> with the role that you have created and attached to the instance
+#!/bin/bash
+
+curl http://169.254.169.254/latest/meta-data/iam/security-credentials/<YOUR_IAM_ROLE> > cred.json
+
+export AWS_ACCESS_KEY_ID=$(cat cred.json| jq .AccessKeyId | xargs)
+export AWS_SECRET_ACCESS_KEY=$(cat cred.json| jq .SecretAccessKey| xargs)
+export AWS_SESSION_TOKEN=$(cat cred.json| jq .Token| xargs)
+export AWS_EXPIRATION=$(cat cred.json| jq .Credentials.Expiration| xargs)
+
+rm -f cred.json
